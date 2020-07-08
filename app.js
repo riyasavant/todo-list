@@ -3,10 +3,10 @@ const bodyParser = require('body-parser');
 const app = express();
 
 
-const names = ["Goof"];
-const dogList = "Dog List";
+const names = ["Coding"];
+const dogList = "TO-DO LIST";
 
-app.use(express.static('public'));
+app.use(express.static(__dirname+'/public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 
