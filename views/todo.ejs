@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <title>Test app</title>
+        <title>Todo-list app</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="css/styles.css" type="text/css">
     </head>
@@ -10,8 +10,8 @@
         <div>
             <h1> <%= title %> </h1>
             
-            <% for(var i=0; i<dogNames.length ; i++) { %>
-                <p> <%= dogNames[i] %> </p>
+            <% for(var i=0; i<todoItems.length ; i++) { %>
+                <p> <%= todoItems[i] %> </p>
             <% } %>
             
             <form action="/" method="POST">

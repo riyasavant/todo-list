@@ -3,30 +3,24 @@ const bodyParser = require('body-parser');
 const app = express();
 
 
-const names = ["Coding"];
-const dogList = "TO-DO LIST";
+const items = ["Coding"];
+const titleName = "TO-DO LIST";
 
 app.use(express.static(__dirname+'/public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 
-
-
 app.get('/', function(req, res) {
-
-
-    res.render("dog", {title: dogList, dogNames: names});
-
-
+    res.render("todo", {title: titleName, todoItems: items});
 });
 
 app.post('/', function(req, res) {
     
     if(req.body.button === 'pressed') {
-        var name = req.body.item;
-        names.push(name);
+        var getItem = req.body.item;
+        items.push(getItem);
     } else if(req.body.buttonDelete === 'pressed') {
-        names.pop();
+        items.pop();
     }
     res.redirect('/');
 })
