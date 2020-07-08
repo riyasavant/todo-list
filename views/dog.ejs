@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Test app</title>
+    </head>
+    <body>
+        <h1> <%= title %> </h1>
+
+
+        <ul>
+            <% for(var i=0; i<dogNames.length ; i++) { %>
+                    <li> <%= dogNames[i] %> </li>
+            <% } %>
+        </ul>
+
+
+        <form action="/" method="POST">
+            <input type="text" name="item" placeholder="Add dog name">
+            <button type="submit" name="button" value="pressed">Add</button>
+            <button type="submit" name="buttonDelete" value="pressed">Delete</button>
+        </form>
+
+    </body>
+</html>
