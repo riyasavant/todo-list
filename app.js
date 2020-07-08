@@ -1,6 +1,7 @@
 //require all the external modules
 const express = require('express');
 const bodyParser = require('body-parser');
+const date = require(__dirname+"/date.js");
 const app = express();
 
 //create an array in the global scope to hold the items added or deleted.
@@ -16,16 +17,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 
 app.get('/', function(req, res) {
-
-    //to get the weekday, month and day in either month or numeric format.
-    const event = new Date();
-    let options = {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long'
-    }
-
-    res.render("todo", {title: event.toLocaleDateString('en-GB', options), todoItems: items});
+    res.render("todo", {title: date(), todoItems: items});
 });
 
 
