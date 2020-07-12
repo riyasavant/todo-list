@@ -1,10 +1,10 @@
 //require all the external modules
 const express = require('express');
+const _ = require('lodash');
 const bodyParser = require('body-parser');
 const date = require(__dirname+"/date.js");
 const mongoose = require('mongoose');
 const app = express();
-
 
 //to tell express to make use of the static files in the public directory.
 app.use(express.static(__dirname+'/public'));
@@ -37,6 +37,13 @@ const item3 = new Item({
 
 const items = [item1, item2, item3];
 
+const listSchema = {
+    name: String,
+    items: [itemsSchema]
+};
+
+const List = mongoose.model('List', listSchema);
+
 app.get('/', function(req, res) {
 
     Item.find({}, function(err, result){
@@ -55,7 +62,7 @@ app.get('/', function(req, res) {
                 res.redirect('/');
             }
             else {
-                res.render("todo", {title: 'To-do List', todoItems: result});
+                res.render("todo", {title: 'To-do', todoItems: result});
             }    
         }
     })
@@ -63,39 +70,79 @@ app.get('/', function(req, res) {
     
 });
 
-
 app.post('/', function(req, res) {
     
     //to manage the inputs on add or delete buttons.
     var itemName = req.body.item;
-        
+    var listName = req.body.button;  
     const item = new Item({
         name: itemName
     });
 
-    item.save();
+    if(listName === 'To-do') {
+        item.save();
 
-    //riderection instead of render is used so that the same page is rendered again through the / route with dynamic changes.
-    res.redirect('/');
+        //riderection instead of render is used so that the same page is rendered again through the / route with dynamic changes.
+        res.redirect('/');
+    } else {
+        List.findOne({name: listName}, function(err, foundList){
+            if(err){
+                console.log('Error!');
+            }else {
+                foundList.items.push(item);
+                foundList.save();
+                res.redirect('/' + listName);
+            }
+        })
+    }
+    
 })
 
 app.post('/delete', function(req, res) {
     const deleteItemId = req.body.deleteItem;
-    Item.findByIdAndRemove(deleteItemId, function(err){
-        if(err){
-            console.log('Error while deleting');
-        }else{
-            console.log('Successfully deleted!');
-        }
-        
-    })
-    res.redirect('/');
+    const listName = req.body.listName;
+
+    if(listName === 'To-do'){
+        Item.findByIdAndRemove(deleteItemId, function(err){
+            if(err){
+                console.log('Error while deleting');
+            }else{
+                console.log('Successfully deleted!');
+            }
+            res.redirect('/');
+        })
+    } else {
+        List.findOneAndUpdate({name: listName}, {$pull: {items: {_id: deleteItemId}}}, function(err, foundList){
+            if(!err){
+                res.redirect('/' + listName);
+            }
+        })
+    }
 })
 
-
 app.get('/:listName', function(req, res){
-    const list = req.params.listName;
-    console.log(list);
+    const listName = _.capitalize(req.params.listName);
+    
+    List.findOne({name: listName}, function(err, foundList){
+        if(err){
+            console.log("Error!");
+        }else {
+            if(!foundList){
+                const list = new List({
+                    name: listName,
+                    items: items
+                });
+                
+                list.save();
+                const pathUrl = '/' + listName;
+                res.redirect(pathUrl);
+
+            }else {
+                res.render("todo", {title: listName, todoItems: foundList.items})
+            }
+        }
+    })
+
 })
 
 app.listen(3000, () => console.log('Server active on port 3000'));
