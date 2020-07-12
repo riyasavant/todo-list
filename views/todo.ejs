@@ -12,16 +12,17 @@
         
          <div class="box">
             <% for(var i=0; i<todoItems.length ; i++) { %>
-                <div class="item">
-                    <input type="checkbox">
-                    <p> <%= todoItems[i] %> </p>
-                </div>
+                <form method="post" action="/delete">
+                    <div class="item">
+                        <input type="checkbox" onchange="this.form.submit()" name="deleteItem" value="<%= todoItems[i]._id %>">
+                        <p> <%= todoItems[i].name %> </p>
+                    </div>
+                </form>
             <% } %>
 
             <form action="/" method="POST" class="item">
                 <input type="text" name="item" placeholder="Add item" autocomplete="off">
                 <button type="submit" name="button" value="pressed" class="btn btn-lg btn-outline-primary">+</button>
-                <button type="submit" name="buttonDelete" value="pressed" class="btn btn-lg btn-outline-warning">-</button>
             </form>
          </div> 
         
